@@ -48,17 +48,21 @@ const App = () => {
       }
     }
 
-    setPersons(persons.concat(personObject));
     setNewName("");
     setNewNumber("");
-    personService.create(personObject).then((response) => {
-      setMessage(`Successfully added ${personObject.name}`);
-      setMessageType("Success");
-      personService.getAll().then((response) => {
-        setPersons(response.data);
+    personService
+      .create(personObject)
+      .then((response) => {
+        setMessage(`Successfully added ${personObject.name}`);
+        setMessageType("Success");
+        personService.getAll().then((response) => {
+          setPersons(response.data);
+        });
+      })
+      .catch((error) => {
+        setMessage(error.response.data);
+        setMessageType("Error");
       });
-      console.log(response);
-    });
   };
 
   const filterResults = (event) => {
