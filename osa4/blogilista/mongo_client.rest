@@ -1,0 +1,15 @@
+POST http://localhost:3003/api/blogs HTTP/1.1
+content-type: application/json
+
+{
+    "title": "Football",
+    "author": "Kari Tapio",
+    "url": "www.google.com",
+    "likes": 0
+}
+
+####
+
+GET http://localhost:3003/api/blogs
+
+### X1b1iw9Pux045mF0
