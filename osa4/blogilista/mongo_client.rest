@@ -1,15 +1,42 @@
 POST http://localhost:3003/api/blogs HTTP/1.1
 content-type: application/json
+Authorization: Bearer xxxxx
 
 {
-    "title": "Football",
-    "author": "Kari Tapio",
+    "title": "Skateboarding",
+    "author": "Mazuel",
     "url": "www.google.com",
-    "likes": 0
+    "likes": 14
+}
+###
+
+GET http://localhost:3003/api/blogs
+
+###
+
+DELETE http://localhost:3003/api/blogs/61915bfa94779814ac026450
+Authorization: Bearer xxxxx
+###
+
+POST http://localhost:3003/api/login
+Content-Type: application/json
+
+{
+    "username": "Mazuel",
+    "password": "test123" 
 }
 
 ####
 
-GET http://localhost:3003/api/blogs
+POST http://localhost:3003/api/users
+Content-Type: application/json
 
-### X1b1iw9Pux045mF0
+{
+    "username": "KOrra",
+    "password": "helloyoutube",
+    "name": "Maz Kaz"
+}
+
+####
+
+GET http://localhost:3003/api/users
