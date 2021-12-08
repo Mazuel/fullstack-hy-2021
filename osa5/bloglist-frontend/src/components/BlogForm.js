@@ -4,7 +4,6 @@ const BlogForm = ({ createBlog }) => {
   const [newBlog, setNewBlog] = useState('');
   const [newAuthor, setNewAuthor] = useState('');
   const [newUrl, setNewUrl] = useState('');
-  const [newLikes, setNewLikes] = useState('');
 
   const handleBlogChange = (event) => {
     setNewBlog(event.target.value);
@@ -16,10 +15,6 @@ const BlogForm = ({ createBlog }) => {
 
   const handleUrlChange = (event) => {
     setNewUrl(event.target.value);
-  };
-
-  const handleLikesChange = (event) => {
-    setNewLikes(event.target.value);
   };
 
   const addBlog = (event) => {
@@ -37,13 +32,13 @@ const BlogForm = ({ createBlog }) => {
 
   return (
     <form onSubmit={addBlog}>
-      <label for='title'>Title:</label>
+      <label htmlFor='title'>Title:</label>
       <input id='title' value={newBlog} onChange={handleBlogChange} />
       <br />
-      <label for='author'>Author</label>
+      <label htmlFor='author'>Author</label>
       <input id='author' value={newAuthor} onChange={handleAuthorChange} />
       <br />
-      <label for='url'>Url:</label>
+      <label htmlFor='url'>Url:</label>
       <input id='url' value={newUrl} onChange={handleUrlChange} />
       <br />
       <button type='submit'>create</button>

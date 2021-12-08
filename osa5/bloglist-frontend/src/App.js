@@ -4,6 +4,8 @@ import BlogForm from './components/BlogForm';
 import blogService from './services/blogs';
 import loginService from './services/login';
 import Notification from './components/Notification';
+import PropTypes from 'prop-types';
+import _ from 'lodash';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -14,7 +16,13 @@ const App = () => {
   const [blogFormVisible, setBlogFormVisible] = useState(false);
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
+    blogService.getAll().then((blogs) =>
+      setBlogs(
+        blogs.sort(function (a, b) {
+          return b.likes - a.likes;
+        })
+      )
+    );
   }, []);
 
   useEffect(() => {
@@ -22,6 +30,7 @@ const App = () => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
       setUser(user);
+      console.log(user);
       blogService.setToken(user.token);
     }
   }, []);
@@ -90,6 +99,14 @@ const App = () => {
     </form>
   );
 
+  loginForm.propTypes = {
+    handleSubmit: PropTypes.func.isRequired,
+    handleUsernameChange: PropTypes.func.isRequired,
+    handlePasswordChange: PropTypes.func.isRequired,
+    username: PropTypes.string.isRequired,
+    password: PropTypes.string.isRequired,
+  };
+
   const blogFrom = () => {
     const hideWhenVisible = { display: blogFormVisible ? 'none' : '' };
     const showWhenVisible = { display: blogFormVisible ? '' : 'none' };
@@ -107,6 +124,44 @@ const App = () => {
     );
   };
 
+  const updateBlog = async (blog) => {
+    const newLikes = blog.likes + 1;
+    const id = blog.id;
+
+    const newBlog = {
+      id: blog.id,
+      title: blog.title,
+      author: blog.author,
+      url: blog.url,
+      user: blog.user.id,
+      likes: newLikes,
+    };
+
+    const updatedBlog = await blogService.update(id, newBlog);
+
+    const newBlogs = blogs.map((blog) =>
+      blog.id === updatedBlog.id ? updatedBlog : blog
+    );
+    setBlogs(
+      newBlogs.sort(function (a, b) {
+        return b.likes - a.likes;
+      })
+    );
+  };
+
+  const deleteBlog = async (blog) => {
+    if (window.confirm(`Remove blog: ${blog.title} by ${blog.author}`)) {
+      const id = blog.id;
+
+      await blogService.remove(id);
+
+      const newBlogs = _.reject(blogs, function (o) {
+        return o.id === id;
+      });
+      setBlogs(newBlogs);
+    }
+  };
+
   return (
     <div>
       <h2>blogs</h2>
@@ -121,7 +176,13 @@ const App = () => {
         </div>
       )}
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+        <Blog
+          key={blog.id}
+          blog={blog}
+          updateBlog={updateBlog}
+          deleteBlog={deleteBlog}
+          currentUserName={user?.name}
+        />
       ))}
     </div>
   );
